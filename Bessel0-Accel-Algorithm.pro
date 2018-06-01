@@ -25,14 +25,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        widget.cpp \
-    bess_accel.cpp \
-    bess_matlab.cpp \
-    gen_data.cpp
+        widget.cpp
 
 HEADERS += \
         widget.h \
-    bess.h
+    bess.h \
+    bess_accel.h \
+    bess_matlab.h \
+    gen_data.h
 
 FORMS += \
         widget.ui

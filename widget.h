@@ -33,13 +33,18 @@ private slots:
 
     void on_pushButton_data_loc_clicked();
 
-    void on_pushButton_clicked();
+    void on_pushButton_gen_data_clicked();
+
+    void on_pushButton_accel_result_clicked();
+
+    void on_pushButton_matlab_result_clicked();
 
 private:
     Ui::Widget *ui;
     QString matlab_loc;
     QString matlab_script;
     QString data_loc;
+    QString save_dir;
     int compute_cnt;
 };
 

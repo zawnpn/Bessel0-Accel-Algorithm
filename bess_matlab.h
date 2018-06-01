@@ -1,8 +1,10 @@
+#ifndef BESS_MATLAB_H
+#define BESS_MATLAB_H
+
 #include <QString>
 #include <QProcess>
 #include <QDebug>
 #include <iostream>
-#include <unistd.h>
 
 QString* get_matlab_result(QString matlab_loc, QString matlab_script, QString data_file, int compute_cnt){
     QString *result = new QString[3];
@@ -14,24 +16,7 @@ QString* get_matlab_result(QString matlab_loc, QString matlab_script, QString da
     qDebug()<<matlab_proc;
     QProcess *proc = new QProcess;
     proc->start(matlab_proc);
-
-//    QByteArray procOutput;
-        // 等待进程结束
-    while (false == proc->waitForFinished())
-    {
-        ;
-    }
-//    while(true){
-//        usleep(1000);
-//        procOutput = proc->readAll();
-//        qDebug()<<procOutput.data()+procOutput.size()-1;
-//        if (*(procOutput.data()+procOutput.size()-1)=='d'){
-//            break;
-//        }
-//    }
-//    proc->waitForFinished();
-
-
+    while (false == proc->waitForFinished()){;}
     FILE *f;
     double d1,d2,d3;
     QString script_loc = dir_loc + "/bes_tmp";
@@ -44,3 +29,5 @@ QString* get_matlab_result(QString matlab_loc, QString matlab_script, QString da
     result[2] = QString::number(d3);
     return result;
 }
+
+#endif // BESS_MATLAB_H

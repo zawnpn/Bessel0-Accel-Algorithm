@@ -1,9 +1,10 @@
-#include "bess.h"
+#ifndef BESS_ACCEL_H
+#define BESS_ACCEL_H
+
 #include <QString>
 #include <fstream>
-double fun(double ax,double y){
-   return BESSI0(ax)-y;
-}
+#include "bess.h"
+
 QString* get_accel_result(QString data_file,int compute_cnt){
     QString *result = new QString[3];
     double *rst = new double[compute_cnt];
@@ -15,6 +16,8 @@ QString* get_accel_result(QString data_file,int compute_cnt){
     double Time=0,onceTime;
     QByteArray tmp = data_file.toUtf8();
     const char *file_name = tmp.data();
+    int p1 = data_file.lastIndexOf('/');
+    QString dir_loc = data_file.left(p1);
     FILE *f;
     start = clock();
     f = fopen(file_name,"r+");
@@ -28,7 +31,7 @@ QString* get_accel_result(QString data_file,int compute_cnt){
             if(BESSI0(m)>y) r=m;
             else s=m;
         }
-        if(fun(a*s,y)>-0.01&&fun(a*s,y)<0.01) qDebug()<<"yes";
+        if(b_check(a*s,y)>-0.01&&b_check(a*s,y)<0.01) qDebug()<<"yes";
         rst[cnt++] = s;
     }
     end = clock();
@@ -38,9 +41,11 @@ QString* get_accel_result(QString data_file,int compute_cnt){
     result[0] = QString::number(Time);
     result[1] = QString::number(cnt);
     result[2] = QString::number(onceTime);
-    std::ofstream outFile("/home/zwp/Test/bes_test/accel_result.txt");
+    std::ofstream outFile((dir_loc+"/accel_result.txt").toUtf8().data());
     for (int i=0;i<k;++i){
         outFile<<rst[i]<<std::endl;
     }
     return result;
 }
+
+#endif // BESS_ACCEL_H

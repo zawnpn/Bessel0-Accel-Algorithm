@@ -5,9 +5,10 @@
 #include <QMessageBox>
 #include <QDesktopWidget>
 #include <QFileDialog>
-#include "bess_accel.cpp"
-#include "bess_matlab.cpp"
-#include "gen_data.cpp"
+#include <QProcess>
+#include "bess_accel.h"
+#include "bess_matlab.h"
+#include "gen_data.h"
 
 Widget::Widget(QWidget *parent) :
     QWidget(parent),
@@ -16,7 +17,8 @@ Widget::Widget(QWidget *parent) :
     ui->setupUi(this);
     matlab_loc = "/usr/local/MATLAB/R2017b/bin/matlab";
     compute_cnt = 100;
-    QDesktopWidget* desktop = QApplication::desktop(); // =qApp->desktop();也可以
+    data_loc = "/home/zwp/Test/bes_test/besdata.txt";
+    QDesktopWidget* desktop = QApplication::desktop();
     move((desktop->width() - this->width())/2, (desktop->height() - this->height())/2);
 }
 
@@ -36,6 +38,9 @@ void Widget::on_pushButton_accel_clicked()
 
 void Widget::on_pushButton_matlab_clicked()
 {
+    ui->label_matlab_time->setText(tr("生成结果中..."));
+    ui->label_matlab_counts->setText(tr("生成结果中..."));
+    ui->label_matlab_once->setText(tr("生成结果中..."));
     QMessageBox::information(this,tr("Matlab Bessel 算法"), tr("正在调用Matlab运行Bessel算法，请稍等..."));
     QString *matlab_result = get_matlab_result(this->matlab_loc, this->matlab_script, this->data_loc, this->compute_cnt);
     QMessageBox::information(this,tr("Matlab Bessel 算法"), tr("运行完毕，请检查结果！"));
@@ -59,6 +64,8 @@ void Widget::on_pushButton_matlab_script_clicked()
 
 void Widget::on_pushButton_report_clicked()
 {
+//    QString save_dir = QFileDialog::getExistingDirectory(this, tr("选择目录"), "/home/zwp/Test/bes_test", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+//    this->save_dir = save_dir;
     float accel_time = ui->label_accel_once->text().toFloat();
     float matlab_time = ui->label_matlab_once->text().toFloat();
     float ratio = matlab_time/accel_time;
@@ -78,7 +85,24 @@ void Widget::on_pushButton_data_loc_clicked()
     qDebug()<<this->data_loc;
 }
 
-void Widget::on_pushButton_clicked()
+void Widget::on_pushButton_gen_data_clicked()
 {
     gen_data(this->data_loc,this->compute_cnt);
+    QString msg = tr("数据生成完毕，已保存至\n")+data_loc;
+    QMessageBox::information(this,tr("生成数据"), msg);
+}
+void Widget::on_pushButton_accel_result_clicked()
+{
+    int p1 = this->data_loc.lastIndexOf('/');
+    QString dir_loc = this->data_loc.left(p1);
+    QProcess *proc = new QProcess();
+    proc->start("kate " + dir_loc + "/accel_result.txt");
+}
+
+void Widget::on_pushButton_matlab_result_clicked()
+{
+    int p1 = this->matlab_script.lastIndexOf('/');
+    QString dir_loc = this->matlab_script.left(p1);
+    QProcess *proc = new QProcess();
+    proc->start("kate " + dir_loc + "/matlab_result.txt");
 }

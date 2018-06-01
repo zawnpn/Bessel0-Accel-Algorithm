@@ -79,4 +79,7 @@ double BESSI1(double X) {
     }
 }
 
+double b_check(double ax,double y){
+   return BESSI0(ax)-y;
+}
 #endif // BESS_H
