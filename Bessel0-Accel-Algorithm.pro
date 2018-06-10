@@ -39,3 +39,6 @@ FORMS += \
 
 RESOURCES += \
     imgs.qrc
+
+QMAKE_CXXFLAGS += -fopenmp
+QMAKE_LFLAGS += -fopenmp

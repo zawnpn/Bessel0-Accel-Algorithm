@@ -39,6 +39,8 @@ private slots:
 
     void on_pushButton_matlab_result_clicked();
 
+    void on_pushButton_matlab_outside_clicked();
+
 private:
     Ui::Widget *ui;
     QString matlab_loc;

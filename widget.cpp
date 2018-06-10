@@ -29,6 +29,9 @@ Widget::~Widget()
 
 void Widget::on_pushButton_accel_clicked()
 {
+    ui->label_accel_time->setText(tr("生成结果中..."));
+    ui->label_accel_counts->setText(tr("生成结果中..."));
+    ui->label_accel_once->setText(tr("生成结果中..."));
     QString *accel_result;
     accel_result = get_accel_result(this->data_loc, this->compute_cnt);
     ui->label_accel_time->setText(accel_result[0]);
@@ -43,6 +46,16 @@ void Widget::on_pushButton_matlab_clicked()
     ui->label_matlab_once->setText(tr("生成结果中..."));
     QMessageBox::information(this,tr("Matlab Bessel 算法"), tr("正在调用Matlab运行Bessel算法，请稍等..."));
     QString *matlab_result = get_matlab_result(this->matlab_loc, this->matlab_script, this->data_loc, this->compute_cnt);
+    QMessageBox::information(this,tr("Matlab Bessel 算法"), tr("运行完毕，请检查结果！"));
+    ui->label_matlab_time->setText(matlab_result[0]);
+    ui->label_matlab_counts->setText(matlab_result[1]);
+    ui->label_matlab_once->setText(matlab_result[2]);
+}
+
+void Widget::on_pushButton_matlab_outside_clicked()
+{
+    QMessageBox::information(this,tr("Matlab Bessel 算法"), tr("请先运行Matlab算法，结束后点击确定."));
+    QString *matlab_result = get_matlab_result(this->matlab_loc, this->matlab_script, this->data_loc, this->compute_cnt,false);
     QMessageBox::information(this,tr("Matlab Bessel 算法"), tr("运行完毕，请检查结果！"));
     ui->label_matlab_time->setText(matlab_result[0]);
     ui->label_matlab_counts->setText(matlab_result[1]);
@@ -70,8 +83,8 @@ void Widget::on_pushButton_report_clicked()
     float matlab_time = ui->label_matlab_once->text().toFloat();
     float ratio = matlab_time/accel_time;
     ui->label_result_ratio->setText(QString::number(ratio));
-    ui->label_result_1->setText(tr("1e-6"));
-    ui->label_result_2->setText(tr("1e-4"));
+    ui->label_result_1->setText(tr("双精度"));
+    ui->label_result_2->setText(tr("双精度"));
 }
 
 void Widget::on_comboBox_currentTextChanged(const QString &arg1)
@@ -106,3 +119,5 @@ void Widget::on_pushButton_matlab_result_clicked()
     QProcess *proc = new QProcess();
     proc->start("kate " + dir_loc + "/matlab_result.txt");
 }
+
+
